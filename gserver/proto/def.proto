@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package itemstore;
+
+option go_package = "your-project/itemstore";
+
+// The ItemService definition. A service is a collection of RPC (Remote Procedure Call) methods.
+service ItemService {
+  // RPC method to insert a new item into the store.
+  // It takes an InsertItemRequest and returns an InsertItemResponse.
+  rpc InsertItem(stream InsertItemRequest) returns (InsertItemResponse) {}
+
+  // RPC method to retrieve all items from the store.
+  // It takes an empty GetItemsRequest and returns a GetItemsResponse containing a list of items.
+  rpc GetItems(GetItemsRequest) returns (GetItemsResponse) {}
+}
+
+// ---- Message Definitions ----
+
+// The Item message corresponds to the Item struct in your Go code.
+message Item {
+  // Field numbers (1, 2, 3) are unique identifiers for the fields in the binary encoding.
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+// The request message for the InsertItem RPC.
+// It contains the data needed to create a new item.
+message InsertItemRequest {
+  string name = 1;
+  string description = 2;
+}
+
+// The response message for the InsertItem RPC.
+// It's empty because success is indicated by a gRPC OK status.
+// An error from the Go function would be translated into a gRPC error status.
+message InsertItemResponse {}
+
+// The request message for the GetItems RPC.
+// It's empty because this RPC retrieves all items and requires no input parameters.
+message GetItemsRequest {}
+
+// The response message for the GetItems RPC.
+// It contains a list of Item messages. The 'repeated' keyword indicates
+// that this field can appear zero or more times (like a slice or array).
+message GetItemsResponse {
+  repeated Item items = 1;
+}
+
+
+
